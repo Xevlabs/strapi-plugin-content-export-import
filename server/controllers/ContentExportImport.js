@@ -2,7 +2,6 @@
 
 const PLUGIN_ID = 'content-export-import';
 
-const { SIMULATION_POPULATE } = require('../../admin/src/constants/customPopulateSchema');
 const validator = require('./validations');
 
 module.exports = {
@@ -22,10 +21,9 @@ module.exports = {
     },
     getContentByType: async (ctx) => {
         const contentTypeUid = ctx.request.query.uid;
-        var populateSchema = '*'
-        if (contentTypeUid === 'api::simulation.simulation') {
-            populateSchema = SIMULATION_POPULATE
-        }
+        const customSchemas = strapi.plugin(PLUGIN_ID).config('customSchemas');
+        customSchemaIndex = customSchemas.find(schema => schema.uid == contentTypeUid)
+        const populateSchema = customSchemaIndex ? customSchemas[customSchemaIndex].customSchema : '*'
         const data = await strapi
             .plugin(PLUGIN_ID)
             .service('contentExportImportService').findAll(contentTypeUid, populateSchema);
