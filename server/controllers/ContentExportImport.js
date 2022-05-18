@@ -22,8 +22,8 @@ module.exports = {
     getContentByType: async (ctx) => {
         const contentTypeUid = ctx.request.query.uid;
         const customSchemas = strapi.plugin(PLUGIN_ID).config('customSchemas');
-        customSchemaIndex = customSchemas.find(schema => schema.uid == contentTypeUid)
-        const populateSchema = customSchemaIndex ? customSchemas[customSchemaIndex].customSchema : '*'
+        const contentTypeCustomSchema = customSchemas.find(schema => schema.uid == contentTypeUid)
+        const populateSchema = contentTypeCustomSchema ? contentTypeCustomSchema.customSchema : '*'
         const data = await strapi
             .plugin(PLUGIN_ID)
             .service('contentExportImportService').findAll(contentTypeUid, populateSchema);
